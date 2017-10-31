@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from tftb.generators import noisecu
+from pytftb.tftb.generators import noisecu
 
 # -- The signals --
 # Amplitude
@@ -33,7 +33,7 @@ s5 = np.concatenate([ A*np.sin(2*np.pi*f5*t) ])
 # Analytic complex uniform white noise.
 noise = noisecu(L)
 
-S = s1 + s2 + s3 + s4 + s5# + np.absolute(noise)
+S = s1 + s2 + s3 + s4 + s5 + noise
 
 plt.figure(1)
 plt.suptitle("Signals")
@@ -65,3 +65,5 @@ plt.plot(noise)
 plt.subplot(7,1,7)
 plt.ylabel("Sum")
 plt.plot(S)
+
+plt.show()
