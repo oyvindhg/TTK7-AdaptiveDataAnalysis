@@ -13,10 +13,15 @@ def generate_signal():
     f4 = 15
     f5 = 18
 
+
     # Sampling
     Fs = 1000
     T = 1 / float(Fs)
     n = 3000
+
+    #Fs = 10000
+    #T = 1 / float(Fs)
+    #n = 20000
 
     t = np.arange(n) * T
     t2 = np.arange(1500, 2500) * T
@@ -29,15 +34,16 @@ def generate_signal():
     s4 = np.concatenate([A * np.sin(2 * np.pi * f4 * t4), np.zeros(2000)])
     s5 = np.concatenate([A * np.sin(2 * np.pi * f5 * t)])
 
+
     # White noise with mean 0 and std 1.
     noise = np.random.normal(0, 1, n)
 
     # from pytftb.tftb.generators import noisecu
     # noise = noisecu(L)
 
-    S = s1 + s2 + s3 + s4 + s5 + noise
+    #S = s1 + s2 + s3 + s4 + s5# + noise
 
-    S = s5 + s1 + noise
+    S =  noise
 
     # plt.figure(1)
     # plt.suptitle("Signals")

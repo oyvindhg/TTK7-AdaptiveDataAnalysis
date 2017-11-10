@@ -8,20 +8,38 @@ from signal_generated import generate_signal
 from signal_to_file import save_signal
 import numpy as np
 import matplotlib.pyplot as plt
+from spikes import find_spikes
 
 from pytftb.tftb.generators import noisecu
 
 
-#S, noise, Fs = generate_signal()
 
-S, Fs = get_signal('ID0_lastexp_lastsecond.txt')
-noise = np.zeros(S.size)
+
+# S, Fs = get_signal('ID0_lastexp_last2seconds.txt')
+# noise = np.zeros(S.size)
+#
+# noise_std = np.std(S)
+# print(noise_std)
+
+S, noise, Fs = generate_signal()
+
+
+#find_spikes(S)
+
 
 T = 1/float(Fs)
 t = np.arange(S.size)*T
+#STFT(S)
+#CWT(S)
 
-STFT(S)
+f_modeex = [1000]
+A_modeex = [0.5]
+index_modeex = [0]
 
-#S_filtered = HHT(S, t, noise)
+
+imfs = HHT(S, t, noise, f_modeex, A_modeex, index_modeex)
+
+for i in range(0, len(imfs)):
+    FFT(imfs[i], Fs)
 
 #save_signal(S_filtered, 'ID0_lastexp_lastsecond_filtered.txt')
