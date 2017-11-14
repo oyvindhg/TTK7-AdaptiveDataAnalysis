@@ -11,11 +11,9 @@ def FFT(S, Fs):
 
     freq = np.fft.fftfreq(L, T)
 
-
-    plt.figure(2)
     plt.grid()
     plt.xlabel("Hz")
 
     plt.plot(freq[0:round(L/2)], 2*np.absolute(fft/L)[0:round(L/2)])
 
-    plt.show()
+    #plt.show()

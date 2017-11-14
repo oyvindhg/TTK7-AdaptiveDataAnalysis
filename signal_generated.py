@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def generate_signal():
 
@@ -43,7 +44,8 @@ def generate_signal():
 
     #S = s1 + s2 + s3 + s4 + s5# + noise
 
-    S =  noise
+    S = A * np.sin(2 * np.pi * f1 * np.arange(400) * 1/100)
+
 
     # plt.figure(1)
     # plt.suptitle("Signals")

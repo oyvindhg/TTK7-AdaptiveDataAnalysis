@@ -16,7 +16,7 @@ def remove_signal_modeex(S, t, f, A):
     return S
 
 # Hilbert-Huang Transform
-def HHT(S, t, noise, f_modeex, A_modeex, index):
+def HHT(S, t, plot):#, f_modeex, A_modeex, index):
 
     #S = add_signal_modeex(S, t, f_modeex[0], A_modeex[0])
 
@@ -27,7 +27,8 @@ def HHT(S, t, noise, f_modeex, A_modeex, index):
     #S = remove_signal_modeex(S, t, f_modeex[0], A_modeex[0])
     #imfs[index[0]] = remove_signal_modeex(imfs[index[0]], t, f_modeex[0], A_modeex[0])
 
-    plot_imfs(S, imfs, t)
+    if plot:
+        plot_imfs(S, imfs, t)
 
     # S_filtered = S - imfs[0][:] - imfs[1][:] - imfs[2][:] - imfs[3][:]
 
@@ -66,9 +67,9 @@ def HHT(S, t, noise, f_modeex, A_modeex, index):
     # plt.plot(np.real(hs3), np.imag(hs3), 'r')
     # plt.plot(np.real(hs4), np.imag(hs4), 'y')
     # plt.plot(np.real(hs5), np.imag(hs5), 'k')
-    #
+    # #
     # plt.show()
-    #
+    # #
     # omega_s1 = unwrap(angle(hs1))  # unwrapped instantaneous phase
     # omega_s2 = unwrap(angle(hs2))
     # omega_s3 = unwrap(angle(hs3))
