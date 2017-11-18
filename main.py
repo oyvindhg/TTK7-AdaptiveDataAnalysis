@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from spikes import find_spikes
 from lowpass_filter import butter_lowpass_filter
 from PyEMD.PyEMD import EEMD
+from IMF_removal import EMD_PSD_filter
 
 from pytftb.tftb.generators import noisecu
 
@@ -19,6 +20,17 @@ from pytftb.tftb.generators import noisecu
 
 S, Fs = get_signal('sig_4.txt')
 noise = np.zeros(S.size)
+
+plt.plot(S)
+plt.ylabel("\u03bcV")
+plt.xlabel('t')
+plt.title('Original signal')
+plt.show()
+
+FFT(S, Fs)
+plt.ylabel("\u03bcV")
+plt.title('FFT of signal')
+plt.show()
 
 S_new2 = butter_lowpass_filter(S,200,Fs,order=6,plot=True)
 
@@ -44,8 +56,8 @@ S_new2 = butter_lowpass_filter(S,200,Fs,order=6,plot=True)
 #find_spikes(S)
 
 
-T = 1/float(Fs)
-t = np.arange(S.size)*T
+dt = 1/float(Fs)
+t = np.arange(S.size)*dt
 #STFT(S)
 #CWT(S)
 
@@ -56,19 +68,28 @@ t = np.arange(S.size)*T
 
 imfs = HHT(S, t, plot=False) #f_modeex, A_modeex, index_modeex)
 
-n_imfs = len(imfs)
 
-S_new = S - imfs[0] - imfs[1] - imfs[2] - imfs[3] - imfs[4] - imfs[n_imfs - 1] - imfs[n_imfs - 2]
+imfs_remove = EMD_PSD_filter(imfs, 4, 200, 80, Fs)
+
+print(imfs_remove)
+
+S_new = S
+for i in imfs_remove:
+    S_new = S_new - imfs[i]
 
 L = len(S)
 plt.subplot(2, 1, 1)
 FFT(S_new, Fs)
 plt.xlim(0, 400)
 plt.ylim(0, 400000)
+plt.ylabel("\u03bcV")
+plt.title('FFT of signal after removing IMFs')
 plt.subplot(2, 1, 2)
 FFT(S_new2, Fs)
 plt.xlim(0, 400)
 plt.ylim(0, 400000)
+plt.ylabel("\u03bcV")
+plt.title('FFT of signal after Butterworth low-pass filter')
 plt.show()
 
 imfs = HHT(S_new, t, plot=True)
@@ -96,17 +117,29 @@ plt.subplot(2, 1, 1)
 FFT(S_new, Fs)
 plt.xlim(0, 200)
 plt.ylim(0, 400000)
+plt.ylabel("\u03bcV")
+plt.title('FFT of signal before downsampling')
 plt.subplot(2, 1, 2)
 FFT(S_ds, 400)
 plt.xlim(0, 200)
 plt.ylim(0, 400000)
+plt.ylabel("\u03bcV")
+plt.title('FFT of signal after downsampling')
 plt.show()
 
 Fs = 400
 S = S_ds
-T = 1/float(Fs)
-T = np.arange(S.size)*T
+dt = 1/float(Fs)
+t = np.arange(S.size)*dt
 
+FFT(S, 400)
+plt.xlim(0, 200)
+plt.ylim(0, 400000)
+plt.ylabel("\u03bcV")
+plt.title('FFT')
+plt.show()
+
+STFT(S)
 
 eemd = EEMD()
 eIMFs = eemd.eemd(S)
@@ -120,13 +153,13 @@ r = np.ceil( (imfNo+1)/c)
 
 plt.ioff()
 plt.subplot(r,c,1)
-plt.plot(T, S, 'r')
+plt.plot(t, S, 'r')
 #plt.xlim((tMin, tMax))
 plt.title("Original signal")
 
 for num in range(imfNo):
     plt.subplot(r,c,num+2)
-    plt.plot(T, eIMFs[num],'g')
+    plt.plot(t, eIMFs[num],'g')
     #plt.xlim((tMin, tMax))
     plt.title("Imf "+str(num+1))
 

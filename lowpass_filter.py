@@ -22,11 +22,15 @@ def butter_lowpass_filter(data, cutoff, Fs, order=5, plot=False):
         plt.plot(cutoff, 0.5 * np.sqrt(2), 'ko')
         plt.axvline(cutoff, color='k')
         plt.xlim(0, 0.5 * Fs)
-        plt.title("Lowpass Filter Frequency Response")
-        plt.xlabel('Frequency [Hz]')
+        plt.xlabel("Hz")
+        plt.title("Lowpass filter frequency response")
+        #plt.xlabel('Frequency [Hz]')
 
         plt.subplot(2, 1, 2)
         plt.plot(y, 'b')
+        plt.title("Signal after lowpass filter")
+        plt.ylabel("\u03bcV")
+        plt.xlabel("t")
         plt.grid()
         plt.show()
 
