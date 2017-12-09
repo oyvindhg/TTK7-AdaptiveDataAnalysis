@@ -22,13 +22,13 @@ S, Fs = get_signal('sig_4.txt')
 noise = np.zeros(S.size)
 
 plt.plot(S)
-plt.ylabel("\u03bcV")
+plt.ylabel("pV")
 plt.xlabel('t')
 plt.title('Original signal')
 plt.show()
 
 FFT(S, Fs)
-plt.ylabel("\u03bcV")
+plt.ylabel("pV")
 plt.title('FFT of signal')
 plt.show()
 
@@ -66,7 +66,7 @@ t = np.arange(S.size)*dt
 #index_modeex = [0]
 
 
-imfs = HHT(S, t, plot=False) #f_modeex, A_modeex, index_modeex)
+imfs = HHT(S, t, plot=True) #f_modeex, A_modeex, index_modeex)
 
 
 imfs_remove = EMD_PSD_filter(imfs, 4, 200, 80, Fs)
@@ -78,18 +78,18 @@ for i in imfs_remove:
     S_new = S_new - imfs[i]
 
 L = len(S)
-plt.subplot(2, 1, 1)
+# plt.subplot(2, 1, 1)
 FFT(S_new, Fs)
 plt.xlim(0, 400)
 plt.ylim(0, 400000)
-plt.ylabel("\u03bcV")
+plt.ylabel("pV")
 plt.title('FFT of signal after removing IMFs')
-plt.subplot(2, 1, 2)
-FFT(S_new2, Fs)
-plt.xlim(0, 400)
-plt.ylim(0, 400000)
-plt.ylabel("\u03bcV")
-plt.title('FFT of signal after Butterworth low-pass filter')
+# plt.subplot(2, 1, 2)
+# FFT(S_new2, Fs)
+# plt.xlim(0, 400)
+# plt.ylim(0, 400000)
+# plt.ylabel("pV")
+# plt.title('FFT of signal after Butterworth low-pass filter')
 plt.show()
 
 imfs = HHT(S_new, t, plot=True)
@@ -117,13 +117,13 @@ plt.subplot(2, 1, 1)
 FFT(S_new, Fs)
 plt.xlim(0, 200)
 plt.ylim(0, 400000)
-plt.ylabel("\u03bcV")
+plt.ylabel("pV")
 plt.title('FFT of signal before downsampling')
 plt.subplot(2, 1, 2)
 FFT(S_ds, 400)
 plt.xlim(0, 200)
 plt.ylim(0, 400000)
-plt.ylabel("\u03bcV")
+plt.ylabel("pV")
 plt.title('FFT of signal after downsampling')
 plt.show()
 
@@ -135,7 +135,7 @@ t = np.arange(S.size)*dt
 FFT(S, 400)
 plt.xlim(0, 200)
 plt.ylim(0, 400000)
-plt.ylabel("\u03bcV")
+plt.ylabel("pV")
 plt.title('FFT')
 plt.show()
 
@@ -165,8 +165,20 @@ for num in range(imfNo):
 
 plt.show()
 
+from scipy.signal import hilbert
+from scipy import angle, unwrap
 
+for i in range(imfNo):
+    hs = hilbert(eIMFs[i])
+    plt.plot(np.real(hs), np.imag(hs))
+    #plt.title('Hilbert transform of IMF ', i)
+    plt.show()
 
+    omega_s = unwrap(angle(hs))  # unwrapped instantaneous phase
+    f_inst_s = np.diff(omega_s)  # instantaneous frequency
+    plt.plot(t[1:], f_inst_s)
+    #plt.title('Instantaneous frequency of IMF ', i)
+    plt.show()
 
 
 #save_signal(S_filtered, 'ID0_lastexp_lastsecond_filtered.txt')

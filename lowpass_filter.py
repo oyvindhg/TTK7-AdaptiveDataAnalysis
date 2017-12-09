@@ -29,7 +29,7 @@ def butter_lowpass_filter(data, cutoff, Fs, order=5, plot=False):
         plt.subplot(2, 1, 2)
         plt.plot(y, 'b')
         plt.title("Signal after lowpass filter")
-        plt.ylabel("\u03bcV")
+        plt.ylabel("pV")
         plt.xlabel("t")
         plt.grid()
         plt.show()
